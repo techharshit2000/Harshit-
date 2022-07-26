@@ -5,31 +5,25 @@ import android.util.Log;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
-import com.marwaeltayeb.souq.model.Favorite;
 import com.marwaeltayeb.souq.net.RetrofitClient;
-import com.marwaeltayeb.souq.utils.RequestCallback;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class AddFavoriteRepository {
+public class PasswordRepository {
 
-    private static final String TAG = AddFavoriteRepository.class.getSimpleName();
+    private static final String TAG = PasswordRepository.class.getSimpleName();
 
-    public LiveData<ResponseBody> addFavorite(Favorite favorite, RequestCallback callback) {
+    public LiveData<ResponseBody> updatePassword(String token, String newPassword, int userId) {
         final MutableLiveData<ResponseBody> mutableLiveData = new MutableLiveData<>();
-        RetrofitClient.getInstance().getApi().addFavorite(favorite).enqueue(new Callback<ResponseBody>() {
+        RetrofitClient.getInstance().getApi().updatePassword(token, newPassword, userId).enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                Log.d(TAG, "onResponse" + response.code());
+                Log.d(TAG,"onResponse"+ response.code());
 
                 ResponseBody responseBody = response.body();
-
-                if(response.code() == 200){
-                    callback.onCallBack();
-                }
 
                 if (response.body() != null) {
                     mutableLiveData.setValue(responseBody);
@@ -41,7 +35,9 @@ public class AddFavoriteRepository {
                 Log.d(TAG, "onFailure" + t.getMessage());
             }
         });
+
         return mutableLiveData;
     }
+
 
 }
